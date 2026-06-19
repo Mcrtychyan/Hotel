@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+
+{% block title %}Регистрация | Grand Hotel{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-8 col-md-10">
+        <div class="auth-card">
+            <div class="auth-header text-center">
+                <div class="auth-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2 class="auth-title">Регистрация</h2>
+                <p class="auth-subtitle">Создайте аккаунт для бронирования номеров</p>
+            </div>
+
+            <div class="auth-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <!-- Фамилия -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="{{ form.surname.id_for_label }}" class="form-label">
+                                    <i class="fas fa-user me-1"></i> Фамилия <span class="text-danger">*</span>
+                                </label>
+                                {{ form.surname }}
+                                {% if form.surname.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.surname.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Имя -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">
+                                    <i class="fas fa-user me-1"></i> Имя <span class="text-danger">*</span>
+                                </label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Отчество -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="{{ form.middle_name.id_for_label }}" class="form-label">
+                                    <i class="fas fa-user me-1"></i> Отчество
+                                </label>
+                                {{ form.middle_name }}
+                                {% if form.middle_name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.middle_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Телефон -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.phone.id_for_label }}" class="form-label">
+                                    <i class="fas fa-phone me-1"></i> Телефон <span class="text-danger">*</span>
+                                </label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.phone.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">В формате: +7 (XXX) XXX-XX-XX</div>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">
+                                    <i class="fas fa-envelope me-1"></i> Email <span class="text-danger">*</span>
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.email.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Дата рождения -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.birth_date.id_for_label }}" class="form-label">
+                                    <i class="fas fa-calendar-alt me-1"></i> Дата рождения <span class="text-danger">*</span>
+                                </label>
+                                {{ form.birth_date }}
+                                {% if form.birth_date.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.birth_date.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Паспорт -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.passport_number.id_for_label }}" class="form-label">
+                                    <i class="fas fa-id-card me-1"></i> Номер паспорта <span class="text-danger">*</span>
+                                </label>
+                                {{ form.passport_number }}
+                                {% if form.passport_number.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.passport_number.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">В формате: XXXX XXXXXX</div>
+                            </div>
+                        </div>
+
+                        <!-- Пароль -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.password.id_for_label }}" class="form-label">
+                                    <i class="fas fa-lock me-1"></i> Пароль <span class="text-danger">*</span>
+                                </label>
+                                {{ form.password }}
+                                {% if form.password.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.password.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">Минимум 6 символов</div>
+                            </div>
+                        </div>
+
+                        <!-- Подтверждение пароля -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.password_confirm.id_for_label }}" class="form-label">
+                                    <i class="fas fa-check-double me-1"></i> Подтверждение пароля <span class="text-danger">*</span>
+                                </label>
+                                {{ form.password_confirm }}
+                                {% if form.password_confirm.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.password_confirm.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                        <label class="form-check-label" for="agreeTerms">
+                            Я соглашаюсь с <a href="#" class="text-gold">условиями использования</a> и <a href="#" class="text-gold">политикой конфиденциальности</a>
+                        </label>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-register-submit">
+                            <i class="fas fa-user-plus me-2"></i> Зарегистрироваться
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p class="text-muted">Уже есть аккаунт? <a href="{% url 'clients:login' %}" class="text-gold fw-bold">Войдите</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .auth-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .auth-header {
+        padding: 2rem 2rem 1.5rem;
+        background: linear-gradient(135deg, #101418, #1b2430);
+        color: #fff;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .auth-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: rgba(200, 169, 106, 0.15);
+        border: 2px solid rgba(200, 169, 106, 0.3);
+        font-size: 2rem;
+        color: var(--gold);
+        margin-bottom: 1rem;
+    }
+
+    .auth-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        color: #fff;
+    }
+
+    .auth-subtitle {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.95rem;
+    }
+
+    .auth-body {
+        padding: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group .form-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text);
+        margin-bottom: 0.3rem;
+    }
+
+    .form-group .form-control {
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 0.7rem 1rem;
+        transition: 0.2s ease;
+        background: #fafafa;
+    }
+
+    .form-group .form-control:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(200, 169, 106, 0.15);
+        background: #fff;
+    }
+
+    .form-group .form-control.is-invalid {
+        border-color: #dc3545;
+    }
+
+    .form-group .form-text {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-top: 0.2rem;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--gold);
+        border-color: var(--gold);
+    }
+
+    .btn-register-submit {
+        background: linear-gradient(135deg, var(--gold), var(--gold-2));
+        color: #1b1b1b;
+        border: none;
+        border-radius: 999px;
+        padding: 0.85rem 1.5rem;
+        font-weight: 700;
+        font-size: 1.05rem;
+        transition: 0.2s ease;
+        box-shadow: 0 8px 20px rgba(200, 169, 106, 0.25);
+    }
+
+    .btn-register-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(200, 169, 106, 0.35);
+        color: #1b1b1b;
+    }
+
+    .btn-register-submit:active {
+        transform: translateY(0);
+    }
+
+    .text-gold {
+        color: var(--gold) !important;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .text-gold:hover {
+        color: var(--gold-2) !important;
+        text-decoration: underline;
+    }
+
+    .alert {
+        border-radius: 12px;
+        border: none;
+    }
+
+    .alert-success {
+        background: rgba(39, 174, 96, 0.1);
+        color: #1f8a4c;
+    }
+
+    .alert-error {
+        background: rgba(231, 76, 60, 0.1);
+        color: #c0392b;
+    }
+
+    .alert-info {
+        background: rgba(52, 152, 219, 0.1);
+        color: #2980b9;
+    }
+
+    /* Адаптив */
+    @media (max-width: 768px) {
+        .auth-body {
+            padding: 1.5rem;
+        }
+
+        .auth-header {
+            padding: 1.5rem 1.5rem 1rem;
+        }
+
+        .auth-title {
+            font-size: 1.4rem;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,174 @@
+<!-- templates/components/footer.html -->
+<footer class="footer mt-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- О нас -->
+            <div class="col-lg-4 col-md-6">
+                <h5 class="text-gold fw-bold mb-3">
+                    <i class="fas fa-hotel me-2"></i> Grand Hotel
+                </h5>
+                <p class="text-white-50" style="font-size: 0.95rem; line-height: 1.8;">
+                    Роскошный отель в самом сердце города. Мы предлагаем комфортные номера,
+                    премиальный сервис и незабываемый отдых для наших гостей.
+                </p>
+                <div class="d-flex gap-3 mt-3">
+                    <a href="#" class="text-white-50" style="transition: 0.3s; font-size: 1.2rem;">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="text-white-50" style="transition: 0.3s; font-size: 1.2rem;">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="text-white-50" style="transition: 0.3s; font-size: 1.2rem;">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="#" class="text-white-50" style="transition: 0.3s; font-size: 1.2rem;">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Быстрые ссылки -->
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-white fw-bold mb-3" style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                    Навигация
+                </h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="/" class="text-white-50 text-decoration-none" style="font-size: 0.95rem; transition: 0.3s;">
+                            <i class="fas fa-chevron-right me-1" style="font-size: 0.6rem; color: var(--gold);"></i> Главная
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'rooms:list' %}" class="text-white-50 text-decoration-none" style="font-size: 0.95rem; transition: 0.3s;">
+                            <i class="fas fa-chevron-right me-1" style="font-size: 0.6rem; color: var(--gold);"></i> Все номера
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-white-50 text-decoration-none" style="font-size: 0.95rem; transition: 0.3s;">
+                            <i class="fas fa-chevron-right me-1" style="font-size: 0.6rem; color: var(--gold);"></i> Услуги
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-white-50 text-decoration-none" style="font-size: 0.95rem; transition: 0.3s;">
+                            <i class="fas fa-chevron-right me-1" style="font-size: 0.6rem; color: var(--gold);"></i> Контакты
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Контакты -->
+            <div class="col-lg-3 col-md-6">
+                <h6 class="text-white fw-bold mb-3" style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                    Контакты
+                </h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2 d-flex align-items-start gap-2">
+                        <i class="fas fa-map-marker-alt text-gold mt-1" style="font-size: 0.9rem;"></i>
+                        <span class="text-white-50" style="font-size: 0.95rem;">г. Хадыженск, ул. Германенко, 15</span>
+                    </li>
+                    <li class="mb-2 d-flex align-items-start gap-2">
+                        <i class="fas fa-phone text-gold mt-1" style="font-size: 0.9rem;"></i>
+                        <span class="text-white-50" style="font-size: 0.95rem;">+7 (918) 350-43-50</span>
+                    </li>
+                    <li class="mb-2 d-flex align-items-start gap-2">
+                        <i class="fas fa-envelope text-gold mt-1" style="font-size: 0.9rem;"></i>
+                        <span class="text-white-50" style="font-size: 0.95rem;">andrey.mcrtychyan@yandex.ru</span>
+                    </li>
+                    <li class="mb-2 d-flex align-items-start gap-2">
+                        <i class="fas fa-clock text-gold mt-1" style="font-size: 0.9rem;"></i>
+                        <span class="text-white-50" style="font-size: 0.95rem;">Круглосуточно</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Быстрое бронирование -->
+            <div class="col-lg-3 col-md-6">
+                <h6 class="text-white fw-bold mb-3" style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                    Бронирование
+                </h6>
+                <p class="text-white-50" style="font-size: 0.95rem;">
+                    Забронируйте номер прямо сейчас и получите лучшие условия!
+                </p>
+                <a href="{% url 'rooms:list' %}" class="btn btn-gold w-100" style="border-radius: 999px; padding: 12px; font-weight: 700; transition: 0.3s;">
+                    <i class="fas fa-calendar-check me-2"></i> Забронировать
+                </a>
+                <p class="text-white-50 mt-2" style="font-size: 0.8rem;">
+                    <i class="fas fa-lock me-1"></i> Безопасная оплата
+                </p>
+            </div>
+        </div>
+
+        <!-- Нижняя часть -->
+        <hr style="border-color: rgba(255,255,255,0.08); margin-top: 30px;">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <p class="text-white-50 mb-0" style="font-size: 0.9rem;">
+                © 2026 Grand Hotel. Все права защищены.
+            </p>
+            <div class="d-flex gap-3">
+                <a href="#" class="text-white-50 text-decoration-none" style="font-size: 0.85rem; transition: 0.3s;">
+                    Политика конфиденциальности
+                </a>
+                <a href="#" class="text-white-50 text-decoration-none" style="font-size: 0.85rem; transition: 0.3s;">
+                    Условия использования
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background: linear-gradient(135deg, #0f141a, #1a2230);
+        color: rgba(255,255,255,0.8);
+        padding: 50px 0 30px;
+        margin-top: 56px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .footer a {
+        transition: all 0.3s ease;
+    }
+
+    .footer a:hover {
+        color: var(--gold) !important;
+        transform: translateX(3px);
+    }
+
+    .footer .social-link:hover {
+        transform: translateY(-3px);
+        color: var(--gold) !important;
+    }
+
+    .btn-gold {
+        background: linear-gradient(135deg, var(--gold), var(--gold-2));
+        color: #1b1b1b;
+        border: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gold:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(200,169,106,0.3);
+        color: #1b1b1b;
+    }
+
+    .text-gold {
+        color: var(--gold) !important;
+    }
+
+    @media (max-width: 768px) {
+        .footer {
+            text-align: center;
+        }
+        .footer .d-flex {
+            justify-content: center !important;
+        }
+        .footer ul {
+            padding-left: 0;
+        }
+        .footer .d-flex.gap-3 {
+            justify-content: center !important;
+        }
+    }
+</style>

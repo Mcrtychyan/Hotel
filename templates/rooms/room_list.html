@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}Номера отеля Grand Hotel{% endblock %}
+
+{% block content %}
+<!-- Красивый заголовок с большими отступами -->
+<div class="mb-5 pt-5 pb-4">
+    <div class="text-center">
+        <!-- Золотой декоративный элемент -->
+        <div class="d-flex justify-content-center align-items-center gap-3 mb-3">
+            <div style="width: 60px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold));"></div>
+            <span class="badge px-4 py-2" style="background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #1b1b1b; font-weight: 700; letter-spacing: 2px; border-radius: 999px; font-size: 0.8rem;">
+                <i class="fas fa-crown me-2"></i> PREMIUM
+            </span>
+            <div style="width: 60px; height: 2px; background: linear-gradient(90deg, var(--gold), transparent);"></div>
+        </div>
+
+        <!-- Главный заголовок -->
+        <h1 class="display-3 fw-bold mb-2" style="color: var(--dark); letter-spacing: -1px;">
+            Все <span style="color: var(--gold); position: relative;">
+                номера
+                <span style="position: absolute; bottom: 5px; left: 0; right: 0; height: 8px; background: rgba(200,169,106,0.15); border-radius: 4px;"></span>
+            </span>
+        </h1>
+
+        <!-- Подзаголовок с количеством -->
+        <p class="text-muted mb-0" style="font-size: 1.2rem; font-weight: 400;">
+            <i class="fas fa-door-open me-2" style="color: var(--gold);"></i>
+            <span class="fw-bold" style="color: var(--dark);">{{ rooms|length }}</span> доступных номеров
+        </p>
+
+        <!-- Декоративная линия -->
+        <div style="width: 80px; height: 3px; background: linear-gradient(90deg, var(--gold), var(--gold-2)); border-radius: 3px; margin: 16px auto 0;"></div>
+    </div>
+</div>
+
+<!-- Фильтры и сортировка -->
+<form method="get" action="{% url 'rooms:list' %}">
+<div class="mb-5">
+    <div class="row g-4 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label fw-bold" style="color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px;">
+                <i class="fas fa-tag me-1" style="color: var(--gold);"></i> Категория
+            </label>
+            <select name="type" class="form-select" onchange="this.form.submit()" style="border-radius: 15px; padding: 14px 22px; font-size: 1rem; border: 2px solid var(--border); background: white; transition: all 0.3s;">
+                <option value="">Все категории</option>
+                {% for type_code, type_name in room_types %}
+                <option value="{{ type_code }}" {% if selected_type == type_code %}selected{% endif %}>
+                    {{ type_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-bold" style="color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px;">
+                <i class="fas fa-arrow-up-wide-short me-1" style="color: var(--gold);"></i> Сортировка
+            </label>
+            <select name="sort" class="form-select" onchange="this.form.submit()" style="border-radius: 15px; padding: 14px 22px; font-size: 1rem; border: 2px solid var(--border); background: white; transition: all 0.3s;">
+                <option value="">По умолчанию</option>
+                <option value="price_asc" {% if selected_sort == 'price_asc' %}selected{% endif %}>
+                    Цена: по возрастанию
+                </option>
+                <option value="price_desc" {% if selected_sort == 'price_desc' %}selected{% endif %}>
+                    Цена: по убыванию
+                </option>
+                <option value="capacity" {% if selected_sort == 'capacity' %}selected{% endif %}>
+                    Вместимость: по убыванию
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-bold" style="color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px;">
+                <i class="fas fa-undo me-1" style="color: var(--gold);"></i> Сброс
+            </label>
+            <a href="{% url 'rooms:list' %}" class="btn w-100" style="border-radius: 15px; padding: 14px 22px; font-weight: 600; font-size: 1rem; border: 2px solid var(--border); background: white; color: var(--text); transition: all 0.3s;">
+                <i class="fas fa-undo me-2"></i> Сбросить
+            </a>
+        </div>
+    </div>
+</div>
+</form>
+
+<!-- Список номеров -->
+<div class="row g-4">
+    {% for room in rooms %}
+    <div class="col-lg-4 col-md-6">
+        <div class="room-card h-100" style="border-radius: 24px; overflow: hidden; transition: all 0.3s ease; border: 1px solid var(--border); background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+            <div class="room-image" style="height: 250px; background-image: {% if room.image %}url('{{ room.image.url }}'){% else %}linear-gradient(135deg, #1b2430, #c8a96a){% endif %}; background-size: cover; background-position: center; position: relative;">
+                <div class="room-badge" style="position: absolute; top: 18px; left: 18px; padding: 8px 18px; border-radius: 999px; background: rgba(16,20,24,0.85); color: #fff; font-size: 0.9rem; font-weight: 600; backdrop-filter: blur(8px);">
+                    {{ room.get_room_type_display }}
+                </div>
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: linear-gradient(180deg, transparent, rgba(0,0,0,0.5));"></div>
+            </div>
+            <div class="p-4" style="background: white;">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h5 class="mb-1 fw-bold" style="font-size: 1.3rem; color: var(--dark);">{{ room.get_room_type_display }}</h5>
+                        <p class="text-muted mb-0" style="font-size: 1rem;">
+                            <i class="fas fa-users me-2" style="color: var(--gold);"></i> {{ room.capacity }} чел.
+                        </p>
+                    </div>
+                    <span class="badge-status px-3 py-2" style="border-radius: 999px; font-weight: 600; font-size: 0.85rem;
+                        {% if room.status == 'available' %}background: rgba(39,174,96,.12); color: #1f8a4c;
+                        {% elif room.status == 'occupied' %}background: rgba(231,76,60,.12); color: #c0392b;
+                        {% else %}background: rgba(243,156,18,.14); color: #b9770e;{% endif %}">
+                        {{ room.get_status_display }}
+                    </span>
+                </div>
+
+                <div class="room-price mt-3 mb-3" style="font-size: 2rem; font-weight: 800; color: var(--dark);">
+                    {{ room.price_per_day }} <small style="font-size: 1rem; color: var(--muted); font-weight: 500;">руб./день</small>
+                </div>
+
+                <a href="{% url 'rooms:detail' slug=room.slug %}" class="btn btn-book w-100" style="border-radius: 999px; padding: 14px; font-weight: 700; font-size: 1rem; background: var(--dark); color: #fff; border: none; transition: all 0.3s;">
+                    <i class="fas fa-info-circle me-2"></i> Подробнее
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <i class="fas fa-bed fa-4x text-gold mb-3"></i>
+        <p class="text-muted" style="font-size: 1.2rem;">Нет доступных номеров</p>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .form-select {
+        background-color: white;
+        border: 2px solid var(--border);
+        color: var(--text);
+        transition: all 0.3s ease;
+    }
+
+    .form-select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 4px rgba(200,169,106,0.15);
+    }
+
+    .btn-outline-secondary {
+        color: var(--text);
+        border: 2px solid var(--border);
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: var(--dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(200,169,106,0.25);
+    }
+
+    .room-card {
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+        background: white;
+    }
+
+    .room-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+    }
+
+    .btn-book:hover {
+        background: var(--gold) !important;
+        color: var(--dark) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(200,169,106,0.35);
+    }
+
+    .badge-status {
+        font-size: 0.85rem;
+        padding: 6px 16px;
+    }
+
+    /* Анимация для заголовка */
+    .display-3 {
+        animation: fadeInUp 0.6s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}

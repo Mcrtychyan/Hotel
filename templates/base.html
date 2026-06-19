@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Grand Hotel{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --surface: #ffffff;
+            --dark: #101418;
+            --gold: #c8a96a;
+            --gold-2: #b8914f;
+            --text: #20242b;
+            --muted: #6b7280;
+            --border: rgba(16, 20, 24, 0.08);
+            --shadow: 0 12px 34px rgba(16, 20, 24, 0.08);
+            --radius: 22px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(180deg, #fbfaf8 0%, #f4f1eb 100%);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: Georgia, serif;
+        }
+
+        .navbar-custom {
+            background: rgba(16, 20, 24, 0.96);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 0.9rem 0;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #fff !important;
+        }
+
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .navbar-custom .navbar-brand i {
+            color: var(--gold);
+            margin-right: 8px;
+        }
+
+        .navbar-custom .nav-link {
+            opacity: .85;
+            border-radius: 999px;
+            padding: .5rem .9rem !important;
+            transition: .2s ease;
+        }
+
+        .navbar-custom .nav-link:hover {
+            opacity: 1;
+            background: rgba(255,255,255,0.06);
+        }
+
+        /* Стили для кнопок входа в навбаре */
+        .nav-auth-btn {
+            border-radius: 999px;
+            padding: 0.5rem 1.2rem !important;
+            font-weight: 600;
+            transition: .2s ease;
+        }
+
+        .nav-auth-btn.btn-login {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff !important;
+        }
+
+        .nav-auth-btn.btn-login:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .nav-auth-btn.btn-register {
+            background: var(--gold);
+            color: #1b1b1b !important;
+            border: none;
+        }
+
+        .nav-auth-btn.btn-register:hover {
+            background: var(--gold-2);
+            transform: translateY(-1px);
+        }
+
+        .nav-auth-btn.btn-profile {
+            background: rgba(200, 169, 106, 0.15);
+            border: 1px solid rgba(200, 169, 106, 0.3);
+            color: var(--gold) !important;
+        }
+
+        .nav-auth-btn.btn-profile:hover {
+            background: rgba(200, 169, 106, 0.25);
+        }
+
+        .nav-auth-btn.btn-logout {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            color: #e74c3c !important;
+        }
+
+        .nav-auth-btn.btn-logout:hover {
+            background: rgba(231, 76, 60, 0.25);
+        }
+
+        .user-avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: #1b1b1b;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-right: 8px;
+        }
+
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            padding: 84px 0 76px;
+            margin-bottom: 34px;
+            color: #fff;
+            background: linear-gradient(135deg, #101418, #1b2430);
+            border-bottom-left-radius: 36px;
+            border-bottom-right-radius: 36px;
+        }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(200,169,106,0.16), transparent 30%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.92);
+            font-size: .92rem;
+            margin-bottom: 16px;
+        }
+
+        .hero-section h1 {
+            font-size: clamp(2.2rem, 5vw, 4.2rem);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 14px;
+        }
+
+        .hero-section p {
+            font-size: 1.06rem;
+            color: rgba(255,255,255,0.82);
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .btn-gold, .btn-hero {
+            background: linear-gradient(135deg, var(--gold), var(--gold-2));
+            color: #1b1b1b;
+            border: none;
+            border-radius: 999px;
+            padding: .85rem 1.25rem;
+            font-weight: 700;
+            box-shadow: 0 10px 22px rgba(200,169,106,.22);
+            transition: .2s ease;
+        }
+
+        .btn-gold:hover, .btn-hero:hover {
+            transform: translateY(-2px);
+            color: #111;
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.1rem;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 68px;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+        }
+
+        .glass-card,
+        .feature-card,
+        .room-card,
+        .info-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-card, .info-card, .room-card {
+            transition: .22s ease;
+            height: 100%;
+        }
+
+        .feature-card:hover, .info-card:hover, .room-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(200,169,106,0.14), rgba(200,169,106,0.06));
+            color: var(--gold-2);
+            font-size: 1.35rem;
+        }
+
+        .room-card {
+            overflow: hidden;
+        }
+
+        .room-image {
+            height: 210px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1b2430, #c8a96a);
+        }
+
+        .room-image::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 45%, rgba(16,20,24,0.42) 100%);
+        }
+
+        .room-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            z-index: 2;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(16,20,24,0.76);
+            color: #fff;
+            font-size: .78rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .room-price {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .room-price small {
+            font-size: .95rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: .85rem;
+        }
+
+        .badge-available { background: rgba(39,174,96,.12); color: #1f8a4c; }
+        .badge-occupied { background: rgba(231,76,60,.12); color: #c0392b; }
+        .badge-reserved { background: rgba(243,156,18,.14); color: #b9770e; }
+
+        .btn-book {
+            background: var(--dark);
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: .78rem 1.2rem;
+            font-weight: 700;
+        }
+
+        .btn-book:hover {
+            background: var(--gold);
+            color: #111;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #0f141a, #1a2230);
+            color: rgba(255,255,255,0.8);
+            padding: 40px 0;
+            margin-top: 56px;
+        }
+
+        .text-gold { color: var(--gold) !important; }
+        .filter-chip { border-radius: 999px; }
+
+        /* Для прижатия футера к низу */
+        main {
+            flex: 1;
+        }
+
+        /* Адаптив для мобильных */
+        @media (max-width: 991.98px) {
+            .navbar-custom .navbar-nav {
+                padding-top: 0.5rem;
+            }
+            .navbar-custom .nav-item {
+                margin: 0.2rem 0;
+            }
+            .nav-auth-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-custom navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-hotel"></i> Grand Hotel
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'rooms:list' %}"><i class="fas fa-bed"></i> Номера</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-concierge-bell"></i> Услуги</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-phone"></i> Контакты</a>
+    </li>
+
+    <!-- КНОПКА ЗАБРОНИРОВАТЬ (СЛЕВА) -->
+    <li class="nav-item ms-lg-2">
+        <a class="nav-link btn-gold text-dark px-3 py-2" href="{% url 'rooms:list' %}">
+            <i class="fas fa-calendar-check me-1"></i> Забронировать
+        </a>
+    </li>
+
+    <!-- КНОПКИ АВТОРИЗАЦИИ (СПРАВА) -->
+    {% if user.is_authenticated %}
+        <!-- Пользователь авторизован -->
+        <li class="nav-item ms-1">
+            <a class="nav-link nav-auth-btn btn-profile" href="{% url 'clients:profile' %}">
+                <span class="user-avatar">{{ user.name|slice:":1" }}{{ user.surname|slice:":1" }}</span>
+                {{ user.surname }} {{ user.name }}
+            </a>
+        </li>
+        <li class="nav-item ms-1">
+            <a class="nav-link nav-auth-btn btn-logout" href="{% url 'clients:logout' %}">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </li>
+    {% else %}
+        <!-- Пользователь НЕ авторизован -->
+        <li class="nav-item ms-1">
+            <a class="nav-link nav-auth-btn btn-login" href="{% url 'clients:login' %}">
+                <i class="fas fa-sign-in-alt me-1"></i> Войти
+            </a>
+        </li>
+        <li class="nav-item ms-1">
+            <a class="nav-link nav-auth-btn btn-register" href="{% url 'clients:register' %}">
+                <i class="fas fa-user-plus me-1"></i> Регистрация
+            </a>
+        </li>
+    {% endif %}
+</ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+
+<!-- ПОДКЛЮЧАЕМ FOOTER -->
+{% include 'components/footer.html' %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
