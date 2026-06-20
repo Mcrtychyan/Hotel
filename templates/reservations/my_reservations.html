@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+
+{% block title %}Мои бронирования | Grand Hotel{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-10">
+        <div class="auth-card">
+            <div class="auth-header text-center">
+                <div class="auth-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <h2 class="auth-title">Мои бронирования</h2>
+                <p class="auth-subtitle">История ваших бронирований</p>
+            </div>
+
+            <div class="auth-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% if reservations %}
+                    <div class="reservations-list">
+                        {% for reservation in reservations %}
+                            <div class="reservation-card">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3">
+                                        <h5 class="mb-1">{{ reservation.room.get_room_type_display }}</h5>
+                                        <p class="text-muted mb-0">№{{ reservation.room.room_number }}</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="date-info">
+                                            <div>
+                                                <i class="fas fa-calendar-alt me-1"></i>
+                                                <span class="label">Заезд:</span>
+                                                <span class="value">{{ reservation.check_in_date }}</span>
+                                            </div>
+                                            <div>
+                                                <i class="fas fa-calendar-alt me-1"></i>
+                                                <span class="label">Выезд:</span>
+                                                <span class="value">{{ reservation.departure_date }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="price-info">
+                                            <span class="label">Стоимость:</span>
+                                            <span class="value">
+                                                {% with payment=reservation.payments.first %}
+                                                    {% if payment %}
+                                                        {{ payment.amount }} руб.
+                                                    {% else %}
+                                                        Не оплачено
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="status-badge status-{{ reservation.reservation_status }}">
+                                            {{ reservation.get_reservation_status_display }}
+                                        </span>
+                                    </div>
+                                    <div class="col-md-2 text-md-end">
+                                        {% if reservation.reservation_status == 'pending' %}
+                                            <a href="{% url 'reservations:payment' reservation.id %}" class="btn btn-sm btn-gold">
+                                                <i class="fas fa-credit-card me-1"></i> Оплатить
+                                            </a>
+                                        {% endif %}
+                                        {% if reservation.reservation_status in 'pending confirmed' %}
+                                            <a href="{% url 'reservations:cancel' reservation.id %}"
+                                               class="btn btn-sm btn-outline-danger mt-1 mt-md-0 ms-1"
+                                               onclick="return confirm('Вы уверены, что хотите отменить бронирование?')">
+                                                <i class="fas fa-times me-1"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-calendar-plus fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">У вас пока нет бронирований</h4>
+                        <p class="text-muted">Выберите номер и забронируйте его прямо сейчас!</p>
+                        <a href="{% url 'rooms:list' %}" class="btn btn-register-submit mt-3">
+                            <i class="fas fa-bed me-2"></i> Посмотреть номера
+                        </a>
+                    </div>
+                {% endif %}
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'clients:profile' %}" class="text-muted">
+                        <i class="fas fa-arrow-left me-1"></i> Вернуться в профиль
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .auth-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .auth-header {
+        padding: 2rem;
+        background: linear-gradient(135deg, #101418, #1b2430);
+        color: #fff;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .auth-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: rgba(200, 169, 106, 0.15);
+        border: 2px solid rgba(200, 169, 106, 0.3);
+        font-size: 2rem;
+        color: var(--gold);
+        margin-bottom: 1rem;
+    }
+
+    .auth-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        color: #fff;
+    }
+
+    .auth-subtitle {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.95rem;
+    }
+
+    .auth-body {
+        padding: 2rem;
+    }
+
+    .reservation-card {
+        background: #f8f9fa;
+        padding: 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        transition: 0.2s ease;
+    }
+
+    .reservation-card:hover {
+        background: #f0f1f2;
+    }
+
+    .date-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .date-info .label,
+    .price-info .label {
+        color: var(--muted);
+        font-size: 0.85rem;
+    }
+
+    .date-info .value,
+    .price-info .value {
+        color: var(--text);
+        font-weight: 500;
+    }
+
+    .price-info .value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--gold);
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: rgba(243, 156, 18, 0.12);
+        color: #b9770e;
+    }
+
+    .status-confirmed {
+        background: rgba(39, 174, 96, 0.12);
+        color: #1f8a4c;
+    }
+
+    .status-checked_in {
+        background: rgba(52, 152, 219, 0.12);
+        color: #2980b9;
+    }
+
+    .status-checked_out {
+        background: rgba(149, 165, 166, 0.12);
+        color: #7f8c8d;
+    }
+
+    .status-cancelled {
+        background: rgba(231, 76, 60, 0.12);
+        color: #c0392b;
+    }
+
+    .btn-gold {
+        background: linear-gradient(135deg, var(--gold), var(--gold-2));
+        color: #1b1b1b;
+        border: none;
+        border-radius: 999px;
+        padding: 0.4rem 1rem;
+        font-weight: 600;
+        transition: 0.2s ease;
+        font-size: 0.85rem;
+    }
+
+    .btn-gold:hover {
+        transform: translateY(-1px);
+        color: #1b1b1b;
+    }
+
+    .btn-outline-danger {
+        border-radius: 999px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .btn-register-submit {
+        background: linear-gradient(135deg, var(--gold), var(--gold-2));
+        color: #1b1b1b;
+        border: none;
+        border-radius: 999px;
+        padding: 0.85rem 1.5rem;
+        font-weight: 700;
+        font-size: 1.05rem;
+        transition: 0.2s ease;
+        box-shadow: 0 8px 20px rgba(200, 169, 106, 0.25);
+    }
+
+    .btn-register-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(200, 169, 106, 0.35);
+        color: #1b1b1b;
+    }
+
+    .alert {
+        border-radius: 12px;
+        border: none;
+    }
+
+    @media (max-width: 768px) {
+        .auth-body {
+            padding: 1.5rem;
+        }
+
+        .auth-header {
+            padding: 1.5rem 1.5rem 1rem;
+        }
+
+        .auth-title {
+            font-size: 1.4rem;
+        }
+
+        .reservation-card .row > div {
+            margin-bottom: 0.5rem;
+        }
+
+        .reservation-card .text-md-end {
+            text-align: left !important;
+        }
+    }
+</style>
+{% endblock %}

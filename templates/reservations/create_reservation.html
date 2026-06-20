@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+
+{% block title %}Бронирование номера | Grand Hotel{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-8">
+        <div class="auth-card">
+            <div class="auth-header text-center">
+                <div class="auth-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <h2 class="auth-title">Бронирование номера</h2>
+                <p class="auth-subtitle">{{ room.get_room_type_display }} №{{ room.room_number }}</p>
+            </div>
+
+            <div class="auth-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="room-info mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Тип номера:</strong> {{ room.get_room_type_display }}</p>
+                            <p><strong>Вместимость:</strong> {{ room.capacity }} чел.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Цена за день:</strong> {{ room.price_per_day }} руб.</p>
+                            <p><strong>Статус:</strong> <span class="badge badge-available">Свободен</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="post" id="reservationForm">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.check_in_date.id_for_label }}" class="form-label">
+                                    <i class="fas fa-calendar-alt me-1"></i> Дата заезда <span class="text-danger">*</span>
+                                </label>
+                                {{ form.check_in_date }}
+                                {% if form.check_in_date.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.check_in_date.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.departure_date.id_for_label }}" class="form-label">
+                                    <i class="fas fa-calendar-alt me-1"></i> Дата выезда <span class="text-danger">*</span>
+                                </label>
+                                {{ form.departure_date }}
+                                {% if form.departure_date.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.departure_date.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger mt-3">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="price-summary mt-4 p-3" style="background: #f8f9fa; border-radius: 12px;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Количество дней:</strong> <span id="totalDays">0</span></p>
+                                <p class="mb-1"><strong>Цена за день:</strong> {{ room.price_per_day }} руб.</p>
+                            </div>
+                            <div class="col-md-6 text-md-end">
+                                <h4 class="mb-0">Итого: <span id="totalPrice" class="text-gold">0</span> руб.</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-register-submit">
+                            <i class="fas fa-credit-card me-2"></i> Перейти к оплате
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'rooms:detail' slug=room.slug %}" class="text-muted">
+                            <i class="fas fa-arrow-left me-1"></i> Вернуться к номеру
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkIn = document.getElementById('{{ form.check_in_date.id_for_label }}');
+        const departure = document.getElementById('{{ form.departure_date.id_for_label }}');
+        const totalDays = document.getElementById('totalDays');
+        const totalPrice = document.getElementById('totalPrice');
+        const pricePerDay = {{ room.price_per_day }};
+
+        function calculateTotal() {
+            if (checkIn.value && departure.value) {
+                const start = new Date(checkIn.value);
+                const end = new Date(departure.value);
+                const diffTime = Math.abs(end - start);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays > 0) {
+                    totalDays.textContent = diffDays;
+                    totalPrice.textContent = diffDays * pricePerDay;
+                } else {
+                    totalDays.textContent = '0';
+                    totalPrice.textContent = '0';
+                }
+            }
+        }
+
+        checkIn.addEventListener('change', calculateTotal);
+        departure.addEventListener('change', calculateTotal);
+    });
+</script>
+
+<style>
+    .auth-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .auth-header {
+        padding: 2rem;
+        background: linear-gradient(135deg, #101418, #1b2430);
+        color: #fff;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .auth-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: rgba(200, 169, 106, 0.15);
+        border: 2px solid rgba(200, 169, 106, 0.3);
+        font-size: 2rem;
+        color: var(--gold);
+        margin-bottom: 1rem;
+    }
+
+    .auth-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        color: #fff;
+    }
+
+    .auth-subtitle {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.95rem;
+    }
+
+    .auth-body {
+        padding: 2rem;
+    }
+
+    .form-group .form-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text);
+        margin-bottom: 0.3rem;
+    }
+
+    .form-group .form-control {
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 0.7rem 1rem;
+        transition: 0.2s ease;
+        background: #fafafa;
+    }
+
+    .form-group .form-control:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(200, 169, 106, 0.15);
+        background: #fff;
+    }
+
+    .btn-register-submit {
+        background: linear-gradient(135deg, var(--gold), var(--gold-2));
+        color: #1b1b1b;
+        border: none;
+        border-radius: 999px;
+        padding: 0.85rem 1.5rem;
+        font-weight: 700;
+        font-size: 1.05rem;
+        transition: 0.2s ease;
+        box-shadow: 0 8px 20px rgba(200, 169, 106, 0.25);
+    }
+
+    .btn-register-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(200, 169, 106, 0.35);
+        color: #1b1b1b;
+    }
+
+    .text-gold {
+        color: var(--gold) !important;
+    }
+
+    .badge-available {
+        background: rgba(39, 174, 96, 0.12);
+        color: #1f8a4c;
+        padding: 6px 12px;
+        border-radius: 999px;
+    }
+
+    .room-info {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    .alert {
+        border-radius: 12px;
+        border: none;
+    }
+</style>
+{% endblock %}

@@ -133,13 +133,24 @@
                     </div>
                 </div>
 
-                <!-- Кнопка бронирования -->
-                <a href="#" class="btn w-100 rounded-pill py-2 fw-bold mb-2
-                    {% if room.status == 'available' %}btn-gold{% else %}btn-secondary disabled{% endif %}"
-                    style="font-size: 1rem; letter-spacing: 0.3px;">
-                    <i class="fas fa-calendar-check me-2"></i>
-                    {% if room.status == 'available' %}Забронировать{% else %}Недоступен{% endif %}
-                </a>
+                <!-- Кнопка бронирования - ИСПРАВЛЕНА! -->
+                {% if user.is_authenticated %}
+                    <!-- Пользователь авторизован -->
+                    {% if room.status == 'available' %}
+                        <a href="{% url 'reservations:create' room.slug %}" class="btn w-100 rounded-pill py-2 fw-bold mb-2 btn-gold" style="font-size: 1rem; letter-spacing: 0.3px;">
+                            <i class="fas fa-calendar-check me-2"></i> Забронировать
+                        </a>
+                    {% else %}
+                        <a href="#" class="btn w-100 rounded-pill py-2 fw-bold mb-2 btn-secondary disabled" style="font-size: 1rem; letter-spacing: 0.3px;">
+                            <i class="fas fa-times-circle me-2"></i> Недоступен
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <!-- Пользователь НЕ авторизован -->
+                    <a href="{% url 'clients:login' %}?next={{ request.path }}" class="btn w-100 rounded-pill py-2 fw-bold mb-2 btn-gold" style="font-size: 1rem; letter-spacing: 0.3px;">
+                        <i class="fas fa-sign-in-alt me-2"></i> Войдите для бронирования
+                    </a>
+                {% endif %}
 
                 <a href="{% url 'rooms:list' %}" class="btn btn-outline-secondary w-100 rounded-pill py-2"
                    style="font-size: 0.95rem; font-weight: 500;">
@@ -176,6 +187,11 @@ body {
 }
 
 .btn-gold:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary.disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }

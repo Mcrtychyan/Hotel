@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="row justify-content-center mt-4">
-    <div class="col-lg-6 col-md-8">
+    <div class="col-lg-8">
         <div class="auth-card">
             <div class="auth-header text-center">
                 <div class="auth-icon">
@@ -25,6 +25,8 @@
                     {% endfor %}
                 {% endif %}
 
+                <!-- Личная информация -->
+                <h5 class="mb-3"><i class="fas fa-id-card me-2 text-gold"></i>Личная информация</h5>
                 <div class="profile-info">
                     <div class="profile-item">
                         <span class="profile-label"><i class="fas fa-user me-2"></i>Имя</span>
@@ -56,7 +58,61 @@
                     </div>
                 </div>
 
+                <!-- Мои бронирования -->
+                <h5 class="mb-3 mt-4"><i class="fas fa-calendar-check me-2 text-gold"></i>Мои бронирования</h5>
+                {% if reservations %}
+                    <div class="reservations-list">
+                        {% for reservation in reservations %}
+                            <div class="reservation-item">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <strong>{{ reservation.room.get_room_type_display }}</strong>
+                                        <div class="text-muted small">№{{ reservation.room.room_number }}</div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="small">
+                                            <div><i class="fas fa-calendar-alt me-1"></i>Заезд: {{ reservation.check_in_date }}</div>
+                                            <div><i class="fas fa-calendar-alt me-1"></i>Выезд: {{ reservation.departure_date }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="status-badge status-{{ reservation.reservation_status }}">
+                                            {{ reservation.get_reservation_status_display }}
+                                        </span>
+                                    </div>
+                                    <div class="col-md-3 text-md-end">
+                                        {% if reservation.reservation_status == 'pending' %}
+                                            <a href="{% url 'reservations:payment' reservation.id %}" class="btn btn-sm btn-gold">
+                                                <i class="fas fa-credit-card me-1"></i> Оплатить
+                                            </a>
+                                        {% endif %}
+                                        {% if reservation.reservation_status in 'pending confirmed' %}
+                                            <a href="{% url 'reservations:cancel' reservation.id %}"
+                                               class="btn btn-sm btn-outline-danger mt-1 mt-md-0 ms-1"
+                                               onclick="return confirm('Вы уверены, что хотите отменить бронирование?')">
+                                                <i class="fas fa-times me-1"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-3">
+                        <i class="fas fa-calendar-plus fa-2x text-muted mb-2"></i>
+                        <p class="text-muted mb-0">У вас пока нет бронирований</p>
+                        <a href="{% url 'rooms:list' %}" class="btn btn-sm btn-gold mt-2">
+                            <i class="fas fa-bed me-1"></i> Выбрать номер
+                        </a>
+                    </div>
+                {% endif %}
+
+                <!-- Кнопки действий -->
                 <div class="d-grid gap-2 mt-4">
+                    <a href="{% url 'reservations:my_reservations' %}" class="btn btn-gold">
+                        <i class="fas fa-list me-2"></i> Все бронирования
+                    </a>
                     <a href="{% url 'clients:logout' %}" class="btn btn-danger">
                         <i class="fas fa-sign-out-alt me-2"></i> Выйти из системы
                     </a>
@@ -121,7 +177,7 @@
     .profile-item {
         display: flex;
         justify-content: space-between;
-        padding: 0.75rem 0;
+        padding: 0.5rem 0;
         border-bottom: 1px solid var(--border);
     }
 
@@ -138,6 +194,78 @@
     .profile-value {
         color: var(--muted);
         font-size: 0.95rem;
+    }
+
+    .text-gold {
+        color: var(--gold) !important;
+    }
+
+    /* Стили для бронирований */
+    .reservation-item {
+        background: #f8f9fa;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        margin-bottom: 0.5rem;
+        transition: 0.2s ease;
+    }
+
+    .reservation-item:hover {
+        background: #f0f1f2;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: rgba(243, 156, 18, 0.12);
+        color: #b9770e;
+    }
+
+    .status-confirmed {
+        background: rgba(39, 174, 96, 0.12);
+        color: #1f8a4c;
+    }
+
+    .status-checked_in {
+        background: rgba(52, 152, 219, 0.12);
+        color: #2980b9;
+    }
+
+    .status-checked_out {
+        background: rgba(149, 165, 166, 0.12);
+        color: #7f8c8d;
+    }
+
+    .status-cancelled {
+        background: rgba(231, 76, 60, 0.12);
+        color: #c0392b;
+    }
+
+    .btn-gold {
+        background: linear-gradient(135deg, var(--gold), var(--gold-2));
+        color: #1b1b1b;
+        border: none;
+        border-radius: 999px;
+        padding: 0.4rem 1rem;
+        font-weight: 600;
+        transition: 0.2s ease;
+        font-size: 0.85rem;
+    }
+
+    .btn-gold:hover {
+        transform: translateY(-1px);
+        color: #1b1b1b;
+    }
+
+    .btn-outline-danger {
+        border-radius: 999px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
     }
 
     .btn-danger {
@@ -180,6 +308,14 @@
         .profile-item {
             flex-direction: column;
             gap: 0.25rem;
+        }
+
+        .reservation-item .row > div {
+            margin-bottom: 0.25rem;
+        }
+
+        .reservation-item .text-md-end {
+            text-align: left !important;
         }
     }
 </style>
