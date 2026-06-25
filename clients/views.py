@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, LoginForm
 from .models import Client
-from reservations.models import Reservation  # ✅ Добавляем импорт
+from reservations.models import Reservation
 
 
 def register_view(request):
@@ -54,12 +54,11 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    # ✅ Получаем все бронирования текущего пользователя
     reservations = Reservation.objects.filter(
         client=request.user
-    ).order_by('-check_in_date')  # Сортировка от новых к старым
+    ).order_by('-check_in_date')
 
     return render(request, 'registration/profile.html', {
         'client': request.user,
-        'reservations': reservations,  # ✅ Передаём бронирования в шаблон
+        'reservations': reservations,
     })

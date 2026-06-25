@@ -39,7 +39,6 @@ class RegistrationForm(forms.ModelForm):
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
-        # Простая валидация телефона (можно настроить под свои нужды)
         phone = re.sub(r'[\s\-\(\)]', '', phone)
         if not re.match(r'^\+?[0-9]{10,15}$', phone):
             raise ValidationError('Введите корректный номер телефона')

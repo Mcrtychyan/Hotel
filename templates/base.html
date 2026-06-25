@@ -359,51 +359,48 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-lg-center">
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'rooms:list' %}"><i class="fas fa-bed"></i> Номера</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fas fa-concierge-bell"></i> Услуги</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fas fa-phone"></i> Контакты</a>
-    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'rooms:list' %}"><i class="fas fa-bed"></i> Номера</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-concierge-bell"></i> Услуги</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contacts:contacts' %}"><i class="fas fa-phone"></i> Контакты</a>
+                </li>
 
-    <!-- КНОПКА ЗАБРОНИРОВАТЬ (СЛЕВА) -->
-    <li class="nav-item ms-lg-2">
-        <a class="nav-link btn-gold text-dark px-3 py-2" href="{% url 'rooms:list' %}">
-            <i class="fas fa-calendar-check me-1"></i> Забронировать
-        </a>
-    </li>
+                <li class="nav-item ms-lg-2">
+                    <a class="nav-link btn-gold text-dark px-3 py-2" href="{% url 'rooms:list' %}">
+                        <i class="fas fa-calendar-check me-1"></i> Забронировать
+                    </a>
+                </li>
 
-    <!-- КНОПКИ АВТОРИЗАЦИИ (СПРАВА) -->
-    {% if user.is_authenticated %}
-        <!-- Пользователь авторизован -->
-        <li class="nav-item ms-1">
-            <a class="nav-link nav-auth-btn btn-profile" href="{% url 'clients:profile' %}">
-                <span class="user-avatar">{{ user.name|slice:":1" }}{{ user.surname|slice:":1" }}</span>
-                {{ user.surname }} {{ user.name }}
-            </a>
-        </li>
-        <li class="nav-item ms-1">
-            <a class="nav-link nav-auth-btn btn-logout" href="{% url 'clients:logout' %}">
-                <i class="fas fa-sign-out-alt"></i>
-            </a>
-        </li>
-    {% else %}
-        <!-- Пользователь НЕ авторизован -->
-        <li class="nav-item ms-1">
-            <a class="nav-link nav-auth-btn btn-login" href="{% url 'clients:login' %}">
-                <i class="fas fa-sign-in-alt me-1"></i> Войти
-            </a>
-        </li>
-        <li class="nav-item ms-1">
-            <a class="nav-link nav-auth-btn btn-register" href="{% url 'clients:register' %}">
-                <i class="fas fa-user-plus me-1"></i> Регистрация
-            </a>
-        </li>
-    {% endif %}
-</ul>
+                {% if user.is_authenticated %}
+                    <li class="nav-item ms-1">
+                        <a class="nav-link nav-auth-btn btn-profile" href="{% url 'clients:profile' %}">
+                            <span class="user-avatar">{{ user.name|slice:":1" }}{{ user.surname|slice:":1" }}</span>
+                            {{ user.surname }} {{ user.name }}
+                        </a>
+                    </li>
+                    <li class="nav-item ms-1">
+                        <a class="nav-link nav-auth-btn btn-logout" href="{% url 'clients:logout' %}">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <!-- Пользователь НЕ авторизован -->
+                    <li class="nav-item ms-1">
+                        <a class="nav-link nav-auth-btn btn-login" href="{% url 'clients:login' %}">
+                            <i class="fas fa-sign-in-alt me-1"></i> Войти
+                        </a>
+                    </li>
+                    <li class="nav-item ms-1">
+                        <a class="nav-link nav-auth-btn btn-register" href="{% url 'clients:register' %}">
+                            <i class="fas fa-user-plus me-1"></i> Регистрация
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>
@@ -414,7 +411,6 @@
     </div>
 </main>
 
-<!-- ПОДКЛЮЧАЕМ FOOTER -->
 {% include 'components/footer.html' %}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

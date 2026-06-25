@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django.utils.html import format_html
+from django.utils.text import slugify
 from image_uploader_widget.widgets import ImageUploaderWidget
 from .models import Room
 
@@ -29,6 +30,8 @@ class RoomAdmin(admin.ModelAdmin):
     search_fields = ['room_number']
     readonly_fields = ['image_preview']
 
+    prepopulated_fields = {'slug': ('room_number',)}
+
     fieldsets = (
         ('Основная информация', {
             'fields': ('room_number', 'room_type', 'price_per_day', 'capacity', 'status')
@@ -52,3 +55,19 @@ class RoomAdmin(admin.ModelAdmin):
         return 'Нет фото'
 
     image_preview.short_description = 'Превью'
+
+    # ОТКЛЮЧАЕМ ЗАПИСЬ В ЛОГИ АДМИНКИ (ГЛАВНОЕ!)
+    def log_addition(self, request, object, message):
+        return
+
+    def log_change(self, request, object, message):
+        return
+
+    def log_deletion(self, request, object, object_repr):
+        return
+
+    # Автоматически создаем slug при сохранении (на случай, если prepopulated_fields не сработает)
+    def save_model(self, request, obj, form, change):
+        if not obj.slug:
+            obj.slug = slugify(obj.room_number)
+        super().save_model(request, obj, form, change)

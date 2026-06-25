@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'reservations',
     'services',
     'image_uploader_widget',
+    'contacts',
 ]
 
 MIDDLEWARE = [
@@ -90,7 +91,6 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-
 AUTH_USER_MODEL = 'clients.Client'
 
 AUTHENTICATION_BACKENDS = [
@@ -101,3 +101,64 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = 'clients:login'
 LOGIN_REDIRECT_URL = 'clients:profile'
 LOGOUT_REDIRECT_URL = 'clients:login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'partygamestop007@gmail.com'
+EMAIL_HOST_PASSWORD = 'vwoaopxwsgwcyfeu'
+DEFAULT_FROM_EMAIL = 'partygamestop007@gmail.com'
+ADMIN_EMAIL = 'partygamestop007@gmail.com'
+
+
+
+
+import logging
+
+logging.getLogger('django.contrib.admin').disabled = True
+logging.getLogger('django.contrib.auth').disabled = True
+logging.getLogger('django.db.backends').disabled = True
+logging.getLogger('django.request').disabled = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'handlers': {
+        'null': {
+            'class': 'logging.NullHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['null'],
+            'level': 'CRITICAL',
+            'propagate': False,
+        },
+        'django.contrib.admin': {
+            'handlers': ['null'],
+            'level': 'CRITICAL',
+            'propagate': False,
+        },
+        'django.contrib.auth': {
+            'handlers': ['null'],
+            'level': 'CRITICAL',
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['null'],
+            'level': 'CRITICAL',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['null'],
+            'level': 'CRITICAL',
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['null'],
+            'level': 'CRITICAL',
+            'propagate': False,
+        },
+    },
+}

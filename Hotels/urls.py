@@ -5,10 +5,12 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('contacts/', include('contacts.urls')),
     path('rooms/', include('rooms.urls')),
     path('', include('clients.urls')),
     path('', include('rooms.urls')),
     path('reservations/', include('reservations.urls')),
+
 ]
 
 if settings.DEBUG:

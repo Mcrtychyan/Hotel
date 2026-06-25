@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Контакты - Grand Hotel{% endblock %}
+
+{% block content %}
+<!-- Hero секция -->
+<div class="hero-section" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 40vh;">
+    <div class="container text-center hero-content">
+        <h1 class="text-gold">Свяжитесь с нами</h1>
+        <p class="text-white-50">Мы всегда рады помочь вам с бронированием и ответить на все вопросы</p>
+    </div>
+</div>
+
+<!-- Основная информация -->
+<div class="row g-4 mb-5 mt-4">
+    <div class="col-md-4">
+        <div class="feature-card text-center p-4 h-100">
+            <div class="icon-circle mb-3"><i class="fas fa-map-marker-alt"></i></div>
+            <h5 class="fw-bold">Адрес</h5>
+            <p class="text-muted mb-0">ул. Германенко, 15<br>Хадыженск</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-card text-center p-4 h-100">
+            <div class="icon-circle mb-3"><i class="fas fa-phone-alt"></i></div>
+            <h5 class="fw-bold">Телефон</h5>
+            <p class="text-muted mb-0">+7 (918) 480-20-29</p>
+            <p class="text-muted mb-0">+7 (989) 123-99-95</p>
+            <span class="badge bg-success mt-2">Работаем круглосуточно</span>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-card text-center p-4 h-100">
+            <div class="icon-circle mb-3"><i class="fas fa-envelope"></i></div>
+            <h5 class="fw-bold">Email</h5>
+            <p class="text-muted mb-0">partygamesop007@gmail.com</p>
+            <p class="text-muted mb-0">aelita@gmail.com</p>
+            <span class="badge bg-info mt-2">Отвечаем за 24 часа</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-6">
+        <div class="glass-card p-4 h-100"
+             style="background: white; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.08);">
+            <h4 class="fw-bold mb-3"><i class="fas fa-clock text-gold me-2"></i>Режим работы</h4>
+            <div class="row g-3">
+                <div class="col-12">
+                    <div class="p-3 bg-success bg-opacity-10 rounded-3 border border-success">
+                        <i class="fas fa-clock me-2 text-success"></i>
+                        <span class="fw-bold">Круглосуточно</span>
+                        <span class="text-muted d-block mt-1">Без выходных, 24/7</span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="p-3 bg-warning bg-opacity-10 rounded-3 border border-warning">
+                        <i class="fas fa-headset me-2 text-warning"></i>
+                        <span class="fw-bold">Служба поддержки:</span>
+                        <span class="text-muted">+7 (918) 350-43-50 (круглосуточно)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="glass-card p-4 h-100"
+             style="background: white; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.08);">
+            <h4 class="fw-bold mb-3"><i class="fas fa-share-alt text-gold me-2"></i>Мы в соцсетях</h4>
+            <div class="d-flex gap-3 flex-wrap">
+                <a href="#" class="btn btn-outline-dark rounded-pill px-4">
+                    <i class="fab fa-instagram me-2"></i>MAX
+                </a>
+                <a href="#" class="btn btn-outline-dark rounded-pill px-4">
+                    <i class="fab fa-telegram me-2"></i>Однокласники
+                </a>
+                <a href="#" class="btn btn-outline-dark rounded-pill px-4">
+                    <i class="fab fa-vk me-2"></i>VK
+                </a>
+                <a href="#" class="btn btn-outline-dark rounded-pill px-4">
+                    <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                </a>
+            </div>
+            <p class="text-muted mt-3 mb-0 small">Подписывайтесь на нас, чтобы быть в курсе акций и новостей</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-lg-7">
+        <div class="glass-card p-0 overflow-hidden"
+             style="border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.08);">
+            <div style="height: 450px; background: #e9ecef; position: relative;">
+                <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A1234567890&amp;source=constructor"
+                        width="100%" height="100%" frameborder="0" style="border:0;"></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="glass-card p-4"
+             style="background: white; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.08);">
+            <h4 class="fw-bold mb-4"><i class="fas fa-paper-plane text-gold me-2"></i>Напишите нам</h4>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <form method="post" action="{% url 'contacts:send_message' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Ваше имя</label>
+                    <input type="text" name="name" class="form-control" placeholder="Иван Иванов" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="ivan@example.com" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Тема</label>
+                    <select name="subject" class="form-select">
+                        <option value="booking">Бронирование</option>
+                        <option value="question">Вопрос</option>
+                        <option value="suggestion">Предложение</option>
+                        <option value="other">Другое</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Сообщение</label>
+                    <textarea name="message" class="form-control" rows="4" placeholder="Введите ваше сообщение..."
+                              required></textarea>
+                </div>
+                <button type="submit" class="btn btn-book w-100">
+                    <i class="fas fa-paper-plane me-2"></i> Отправить сообщение
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="glass-card p-4"
+             style="background: linear-gradient(135deg, #101418, #1f2937); border-radius: 28px; color: white;">
+            <h4 class="fw-bold mb-4 text-gold"><i class="fas fa-route me-2"></i>Как добраться</h4>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="icon-circle bg-gold"
+                             style="width: 50px; height: 50px; min-width: 50px; background: #c9a84c;">
+                            <i class="fas fa-train text-dark"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-white">ТАКСИ</h6>
+                            <p class="text-white-50 small mb-0">г. Хадыженск, Ул. "Германенко, 15"</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="icon-circle bg-gold"
+                             style="width: 50px; height: 50px; min-width: 50px; background: #c9a84c;">
+                            <i class="fas fa-bus text-dark"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-white">Автобус</h6>
+                            <p class="text-white-50 small mb-0">Остановка "Санаторий Минеральный"</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="icon-circle bg-gold"
+                             style="width: 50px; height: 50px; min-width: 50px; background: #c9a84c;">
+                            <i class="fas fa-train text-dark"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-white">Ж/д вокзал</h6>
+                            <p class="text-white-50 small mb-0">50 минут пешком или 15 минут на такси</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Часто задаваемые вопросы -->
+<div class="row">
+    <div class="col-12">
+        <div class="glass-card p-4"
+             style="background: white; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.08);">
+            <h4 class="fw-bold mb-4"><i class="fas fa-question-circle text-gold me-2"></i>Часто задаваемые вопросы</h4>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3">
+                        <h6 class="fw-bold">Можно ли заселиться раньше?</h6>
+                        <p class="text-muted small mb-0">Да, при наличии свободных номеров. Рекомендуем уточнить по
+                            телефону за сутки до заезда.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3">
+                        <h6 class="fw-bold">Есть ли отмена бронирования?</h6>
+                        <p class="text-muted small mb-0">Отмена бесплатна за 48 часов до заезда. Позже — удержание 50%
+                            от стоимости.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3">
+                        <h6 class="fw-bold">Можно ли с животными?</h6>
+                        <p class="text-muted small mb-0">Да, в некоторых номерах. Уточняйте при бронировании.
+                            Дополнительная плата — 1000 руб.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3">
+                        <h6 class="fw-bold">Есть ли парковка?</h6>
+                        <p class="text-muted small mb-0">Да, бесплатная охраняемая парковка для гостей отеля.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -40,7 +40,7 @@ class Client(models.Model):
         blank=True
     )
     passport_number = models.CharField(max_length=20, unique=True, verbose_name="Номер паспорта")
-    password = models.CharField(max_length=128, verbose_name="Хеш пароля")  # ИЗМЕНИЛ password_hash НА password
+    password = models.CharField(max_length=128, verbose_name="Хеш пароля")
 
     is_active = models.BooleanField(default=True, verbose_name="Активен")
     is_staff = models.BooleanField(default=False, verbose_name="Доступ в админку")
