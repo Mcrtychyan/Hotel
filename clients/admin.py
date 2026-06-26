@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Client
-# pip install -r requirements.txt - чтобы на другом компе все норм было
+# pip install -r requirements.txt - чтобы на другом компе все норм было https://www.lightgalleryjs.com/
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ['id', 'surname', 'name', 'phone', 'email']
