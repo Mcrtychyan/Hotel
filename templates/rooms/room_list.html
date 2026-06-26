@@ -3,10 +3,8 @@
 {% block title %}Номера отеля Grand Hotel{% endblock %}
 
 {% block content %}
-<!-- Красивый заголовок с большими отступами -->
 <div class="mb-5 pt-5 pb-4">
     <div class="text-center">
-        <!-- Золотой декоративный элемент -->
         <div class="d-flex justify-content-center align-items-center gap-3 mb-3">
             <div style="width: 60px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold));"></div>
             <span class="badge px-4 py-2" style="background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #1b1b1b; font-weight: 700; letter-spacing: 2px; border-radius: 999px; font-size: 0.8rem;">
@@ -15,7 +13,6 @@
             <div style="width: 60px; height: 2px; background: linear-gradient(90deg, var(--gold), transparent);"></div>
         </div>
 
-        <!-- Главный заголовок -->
         <h1 class="display-3 fw-bold mb-2" style="color: var(--dark); letter-spacing: -1px;">
             Все <span style="color: var(--gold); position: relative;">
                 номера
@@ -23,18 +20,15 @@
             </span>
         </h1>
 
-        <!-- Подзаголовок с количеством -->
         <p class="text-muted mb-0" style="font-size: 1.2rem; font-weight: 400;">
             <i class="fas fa-door-open me-2" style="color: var(--gold);"></i>
             <span class="fw-bold" style="color: var(--dark);">{{ rooms|length }}</span> доступных номеров
         </p>
 
-        <!-- Декоративная линия -->
         <div style="width: 80px; height: 3px; background: linear-gradient(90deg, var(--gold), var(--gold-2)); border-radius: 3px; margin: 16px auto 0;"></div>
     </div>
 </div>
 
-<!-- Фильтры и сортировка -->
 <form method="get" action="{% url 'rooms:list' %}">
 <div class="mb-5">
     <div class="row g-4 align-items-end">
@@ -81,7 +75,6 @@
 </div>
 </form>
 
-<!-- Список номеров -->
 <div class="row g-4">
     {% for room in rooms %}
     <div class="col-lg-4 col-md-6">
@@ -176,7 +169,6 @@
         padding: 6px 16px;
     }
 
-    /* Анимация для заголовка */
     .display-3 {
         animation: fadeInUp 0.6s ease;
     }
