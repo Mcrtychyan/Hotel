@@ -4,20 +4,32 @@
 {% block title %}{{ room.get_room_type_display }} — Grand Hotel{% endblock %}
 
 {% block content %}
-<div class="row g-4">
+<div class="row g-4 mt-5">
     <!-- Левая колонка -->
     <div class="col-lg-8">
         <!-- Главное фото -->
         <div class="position-relative rounded-3 overflow-hidden shadow-sm mb-4">
-            {% if room.image %}
-                <img src="{{ room.image.url }}"
-                     class="w-100" style="height: 350px; object-fit: cover;"
-                     alt="{{ room.get_room_type_display }}">
-            {% else %}
-                <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"
-                     class="w-100" style="height: 350px; object-fit: cover;"
-                     alt="{{ room.get_room_type_display }}">
-            {% endif %}
+            <a href="#" data-bs-toggle="modal" data-bs-target="#roomImagesModal" class="d-block">
+                {% if room.image %}
+                    <img src="{{ room.image.url }}"
+                         class="w-100"
+                         style="height: 350px; object-fit: cover; cursor: pointer;"
+                         alt="{{ room.get_room_type_display }}">
+                {% elif room.images.all %}
+                    {% with room.images.all|first as first_img %}
+                        <img src="{{ first_img.image.url }}"
+                             class="w-100"
+                             style="height: 350px; object-fit: cover; cursor: pointer;"
+                             alt="{{ room.get_room_type_display }}">
+                    {% endwith %}
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"
+                         class="w-100"
+                         style="height: 350px; object-fit: cover; cursor: pointer;"
+                         alt="{{ room.get_room_type_display }}">
+                {% endif %}
+            </a>
+
             <span class="position-absolute top-0 end-0 m-3 badge rounded-pill px-3 py-2
                 {% if room.status == 'available' %}bg-success
                 {% elif room.status == 'occupied' %}bg-danger
@@ -26,11 +38,36 @@
                 <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
                 {{ room.get_status_display }}
             </span>
+
             <span class="position-absolute bottom-0 start-0 m-3 badge bg-dark bg-opacity-75 rounded-pill px-3 py-2"
                   style="font-size: 0.9rem; font-weight: 600;">
                 <i class="fas fa-door-open me-1"></i> №{{ room.room_number }}
             </span>
         </div>
+
+        {% if room.images.all or room.image %}
+        <div class="mb-4">
+            <h5 class="fw-bold mb-3">Фотографии номера</h5>
+            <div class="d-flex flex-wrap gap-2">
+                {% if room.image %}
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#roomImagesModal" class="d-block">
+                        <img src="{{ room.image.url }}"
+                             alt="{{ room.get_room_type_display }}"
+                             style="width: 120px; height: 120px; object-fit: cover; border-radius: 10px;"
+                             class="shadow-sm">
+                    </a>
+                {% endif %}
+                {% for img in room.images.all %}
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#roomImagesModal" class="d-block">
+                        <img src="{{ img.image.url }}"
+                             alt="{{ img.alt_text|default:'Фото номера' }}"
+                             style="width: 120px; height: 120px; object-fit: cover; border-radius: 10px;"
+                             class="shadow-sm">
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
         <!-- Информация о номере -->
         <div class="card border-0 shadow-sm rounded-3 mb-4">
@@ -54,7 +91,6 @@
                     {{ room.description|default:"Просторный номер с современным интерьером и всем необходимым для комфортного отдыха." }}
                 </p>
 
-                <!-- Удобства -->
                 <div class="row g-2 mb-3">
                     <div class="col-md-4 col-6">
                         <div class="d-flex align-items-center gap-2">
@@ -94,7 +130,6 @@
                     </div>
                 </div>
 
-                <!-- Что входит -->
                 <div class="border-top pt-3">
                     <span class="fw-bold" style="font-size: 1rem;">В номере:</span>
                     <span class="text-muted ms-2" style="font-size: 0.95rem; font-weight: 500;">Кровать, Wi-Fi, кондиционер, TV, санузел, мини-холодильник</span>
@@ -109,7 +144,6 @@
             <div class="card-body p-4">
                 <h5 class="fw-bold mb-3" style="font-size: 1.3rem;">Бронирование</h5>
 
-                <!-- Цена за день -->
                 <div class="mb-3 pb-3 border-bottom">
                     <div class="d-flex align-items-baseline">
                         <span class="fw-bold text-gold" style="font-size: 2.5rem;">{{ room.price_per_day }}</span>
@@ -117,7 +151,6 @@
                     </div>
                 </div>
 
-                <!-- Информация -->
                 <div class="mb-3">
                     <div class="d-flex justify-content-between py-1">
                         <span class="text-muted" style="font-size: 0.95rem;">Номер</span>
@@ -133,9 +166,7 @@
                     </div>
                 </div>
 
-                <!-- Кнопка бронирования - ИСПРАВЛЕНА! -->
                 {% if user.is_authenticated %}
-                    <!-- Пользователь авторизован -->
                     {% if room.status == 'available' %}
                         <a href="{% url 'reservations:create' room.slug %}" class="btn w-100 rounded-pill py-2 fw-bold mb-2 btn-gold" style="font-size: 1rem; letter-spacing: 0.3px;">
                             <i class="fas fa-calendar-check me-2"></i> Забронировать
@@ -146,7 +177,6 @@
                         </a>
                     {% endif %}
                 {% else %}
-                    <!-- Пользователь НЕ авторизован -->
                     <a href="{% url 'clients:login' %}?next={{ request.path }}" class="btn w-100 rounded-pill py-2 fw-bold mb-2 btn-gold" style="font-size: 1rem; letter-spacing: 0.3px;">
                         <i class="fas fa-sign-in-alt me-2"></i> Войдите для бронирования
                     </a>
@@ -161,16 +191,60 @@
     </div>
 </div>
 
+<!-- Modal со слайдером -->
+<div class="modal fade" id="roomImagesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-body p-0">
+                <div id="roomImagesCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        {% if room.image %}
+                            <button type="button" data-bs-target="#roomImagesCarousel" data-bs-slide-to="0"
+                                    class="active" aria-current="true" aria-label="Slide 1"></button>
+                        {% endif %}
+                        {% for img in room.images.all %}
+                            <button type="button" data-bs-target="#roomImagesCarousel" data-bs-slide-to="{% if room.image %}{{ forloop.counter }}{% else %}{{ forloop.counter0 }}{% endif %}"
+                                    class="{% if not room.image and forloop.first %}active{% endif %}"
+                                    {% if not room.image and forloop.first %}aria-current="true"{% endif %}
+                                    aria-label="Slide {{ forloop.counter }}"></button>
+                        {% endfor %}
+                    </div>
+
+                    <div class="carousel-inner rounded-3 overflow-hidden shadow-lg">
+                        {% if room.image %}
+                            <div class="carousel-item active">
+                                <img src="{{ room.image.url }}" class="d-block w-100" style="max-height: 80vh; object-fit: contain; background: #000;" alt="{{ room.get_room_type_display }}">
+                            </div>
+                        {% endif %}
+
+                        {% for img in room.images.all %}
+                            <div class="carousel-item {% if not room.image and forloop.first %}active{% endif %}">
+                                <img src="{{ img.image.url }}" class="d-block w-100" style="max-height: 80vh; object-fit: contain; background: #000;" alt="{{ img.alt_text|default:'Фото номера' }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#roomImagesCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Предыдущее</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#roomImagesCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Следующее</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-/* Основные стили для улучшения читаемости */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 .text-gold {
     color: #c9a84c;
 }
-
 .btn-gold {
     background: #c9a84c;
     color: #fff;
@@ -178,47 +252,33 @@ body {
     font-weight: 600;
     letter-spacing: 0.5px;
 }
-
 .btn-gold:hover {
     background: #b8973a;
     color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 5px 20px rgba(201,168,76,0.3);
 }
-
-.btn-gold:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
+.btn-gold:disabled,
 .btn-secondary.disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
-
 .card {
     transition: 0.3s;
 }
-
 .card:hover {
     transform: translateY(-3px);
 }
-
 .sticky-top {
     z-index: 100;
 }
-
-/* Улучшенная читаемость текста */
 .card-body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 .badge {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     letter-spacing: 0.3px;
 }
-
-/* Затемнение фона для лучшей читаемости */
 .position-relative .badge {
     backdrop-filter: blur(2px);
 }

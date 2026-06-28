@@ -3,8 +3,19 @@ from django import forms
 from django.utils.html import format_html
 from django.utils.text import slugify
 from image_uploader_widget.widgets import ImageUploaderWidget
-from .models import Room
+from .models import Room, RoomImage
 
+class RoomImageInline(admin.TabularInline):
+    model = RoomImage
+    extra = 3
+    fields = ('image', 'alt_text', 'image_preview')
+    readonly_fields = ('image_preview',)
+
+    def image_preview(self, obj):
+        if obj and obj.image:
+            return format_html('<img src="{}" width="120" height="80" style="object-fit:cover; border-radius:6px;" />', obj.image.url)
+        return "—"
+    image_preview.short_description = 'Превью'
 
 class RoomForm(forms.ModelForm):
     class Meta:
@@ -20,7 +31,6 @@ class RoomForm(forms.ModelForm):
             ),
         }
 
-
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
     form = RoomForm
@@ -29,8 +39,8 @@ class RoomAdmin(admin.ModelAdmin):
     list_filter = ['room_type', 'status']
     search_fields = ['room_number']
     readonly_fields = ['image_preview']
-
     prepopulated_fields = {'slug': ('room_number',)}
+    inlines = [RoomImageInline]
 
     fieldsets = (
         ('Основная информация', {
@@ -38,7 +48,7 @@ class RoomAdmin(admin.ModelAdmin):
         }),
         ('Изображение', {
             'fields': ('image', 'image_preview'),
-            'description': 'Загрузите изображение товара (рекомендуемый размер: 300x300 пикселей)',
+            'description': 'Загрузите главное изображение и дополнительные внизу через "Фотографии номера"',
         }),
         ('Дополнительно', {
             'fields': ('slug',),
@@ -48,25 +58,14 @@ class RoomAdmin(admin.ModelAdmin):
 
     def image_preview(self, obj):
         if obj.image:
-            return format_html(
-                '<img src="{}" width="150" height="150" style="object-fit: cover; border-radius: 10px; border: 2px solid #d4af37;" />',
-                obj.image.url
-            )
+            return format_html('<img src="{}" width="150" height="150" style="object-fit: cover; border-radius: 10px; border: 2px solid #d4af37;" />', obj.image.url)
         return 'Нет фото'
-
     image_preview.short_description = 'Превью'
 
-    # ОТКЛЮЧАЕМ ЗАПИСЬ В ЛОГИ АДМИНКИ (ГЛАВНОЕ!)
-    def log_addition(self, request, object, message):
-        return
+    def log_addition(self, request, object, message): return
+    def log_change(self, request, object, message): return
+    def log_deletion(self, request, object, object_repr): return
 
-    def log_change(self, request, object, message):
-        return
-
-    def log_deletion(self, request, object, object_repr):
-        return
-
-    # Автоматически создаем slug при сохранении (на случай, если prepopulated_fields не сработает)
     def save_model(self, request, obj, form, change):
         if not obj.slug:
             obj.slug = slugify(obj.room_number)

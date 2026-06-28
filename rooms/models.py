@@ -1,14 +1,12 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 
-
 class Room(models.Model):
     ROOM_TYPES = [
         ('standard', 'Стандарт'),
         ('superior', 'Полулюкс'),
         ('suite', 'Люкс'),
     ]
-
     STATUS_CHOICES = [
         ('available', 'Доступен'),
         ('occupied', 'Занят'),
@@ -18,9 +16,9 @@ class Room(models.Model):
     room_type = models.CharField(max_length=20, choices=ROOM_TYPES, verbose_name="Тип номера")
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена за день")
     capacity = models.PositiveIntegerField(verbose_name="Вместимость")
-    status = models.CharField(max_length=20,default='available', choices=STATUS_CHOICES, verbose_name="Статус")
+    status = models.CharField(max_length=20, default='available', choices=STATUS_CHOICES, verbose_name="Статус")
     slug = models.SlugField(unique=True, blank=True, verbose_name="URL")
-    image = models.ImageField(upload_to='rooms/', blank=True, null=True, verbose_name="Фото номера")
+    image = models.ImageField(upload_to='rooms/', blank=True, null=True, verbose_name="Главное фото")
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -38,5 +36,14 @@ class Room(models.Model):
         verbose_name = "Номер"
         verbose_name_plural = "Номера"
 
+class RoomImage(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='images', verbose_name="Номер")
+    image = models.ImageField(upload_to='rooms/gallery/', verbose_name="Фото номера")
+    alt_text = models.CharField(max_length=255, blank=True, verbose_name="Описание")
 
+    class Meta:
+        verbose_name = "Фото номера"
+        verbose_name_plural = "Фотографии номера"
 
+    def __str__(self):
+        return f"Фото {self.room.room_number} ({self.id})"
